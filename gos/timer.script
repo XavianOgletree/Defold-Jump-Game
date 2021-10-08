@@ -1,0 +1,76 @@
+function init(self)
+	self.timer_list = {}
+end
+
+function final(self)
+	-- Add finalization code here
+	-- Learn more: https://defold.com/manuals/script/
+	-- Remove this function if not needed
+end
+
+function update(self, dt)
+	for timer_id, timer in pairs(self.timer_list) do
+		if tick(timer_id, timer, dt) then
+			table.remove(timer_id)
+		end
+	end
+end
+
+function tick(timer_id, timer, dt)
+	if timer.started then
+		timer.time = timer.time + dt
+		if timer.duration <= timer.time then
+			msg.post(timer.sender, "timeout", { timer_id = timer_id })
+			if timer.oneshot then
+				return true
+			else
+				timer.time = 0
+			end
+		end
+	end
+	return false
+end
+
+function on_message(self, message_id, message, sender)
+	local timer_id = message.timer_id
+	if message_id == hash("create_timer") then
+		local duration = message.duration
+		local started = message.started ~= nil and message.started or false
+		local oneshot = message.oneshot ~= nil and message.oneshot or false
+		self.timer_list[timer_id] = {time = 0, duration = duration, started = started, oneshot = oneshot, sender = sender }
+		
+	elseif message_id == hash("delete") then
+		table.remove(self.timer_list, timer_id)
+		
+	elseif message_id == hash("stop") then
+		self.timer_list[timer_id].started = false
+
+	elseif message_id == hash("start") then
+		self.timer_list[timer_id].started = true
+		
+	elseif message_id == hash("set_duration") then
+		self.timer_list[timer_id].duration = message.duration
+
+		if message.reset_time then
+			self.timer_list[timer_id].time = 0
+		end
+	end
+end
+
+function on_input(self, action_id, action)
+	-- Add input-handling code here. The game object this script is attached to
+	-- must have acquired input focus:
+	--
+	--    msg.post(".", "acquire_input_focus")
+	--
+	-- All mapped input bindings will be received. Mouse and touch input will
+	-- be received regardless of where on the screen it happened.
+	-- Learn more: https://defold.com/manuals/input/
+	-- Remove this function if not needed
+end
+
+function on_reload(self)
+	-- Add reload-handling code here
+	-- Learn more: https://defold.com/manuals/hot-reload/
+	-- Remove this function if not needed
+end

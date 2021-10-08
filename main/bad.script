@@ -1,0 +1,43 @@
+go.property("direction", 1)
+local destroy
+
+function init(self)
+	self.left_bounds = 480 - 300
+	self.right_bounds = 480 + 300
+	self.state = 0
+	go.set_position(vmath.vector3(480 - self.direction * 480, 200, 0))
+	go.set("#sprite", "tint", vmath.vector4(1, 1, 1, 0))
+end
+
+function destroy(self)
+	go.delete(go.get_parent())
+	print("deleted")
+end
+
+function update(self, dt)
+	local pos = go.get_position() + vmath.vector3(self.direction * 300 * dt, 0, 0)
+	go.set_position(pos)
+
+	if self.direction > 0 then
+		if pos.x > self.left_bounds and self.state == 0 then
+			go.animate("#sprite", "tint.w", go.PLAYBACK_ONCE_FORWARD, 1, go.EASING_OUTCUBIC, 0.5, 0)
+			self.state = 1
+		elseif pos.x > self.right_bounds then
+			go.animate("#sprite", "tint.w", go.PLAYBACK_ONCE_FORWARD, 0, go.EASING_OUTCUBIC, 0.5, 0)
+			self.state = 2
+		end
+	else 
+		if pos.x < self.right_bounds and self.state == 0 then
+			go.animate("#sprite", "tint.w", go.PLAYBACK_ONCE_FORWARD, 1, go.EASING_OUTCUBIC, 0.5)
+			self.state = 1
+		elseif pos.x < self.left_bounds then
+			go.animate("#sprite", "tint.w", go.PLAYBACK_ONCE_FORWARD, 0, go.EASING_OUTCUBIC, 0.5, 0)
+			self.state = 2
+		end
+	end
+
+	if go.get("#sprite", "tint.w") < 0.001 and self.state == 2 then
+		go.delete()
+		print("deleted")
+	end
+end
