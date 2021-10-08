@@ -1,6 +1,6 @@
 # Jump Block
 
-Jump block is a small game made over the course of two days to get familar with the [Defold game engine]().
+Jump block is a small game made over the course of two days to get familar with the [Defold game engine](https://defold.com/).
 
 # Screenshots
 
