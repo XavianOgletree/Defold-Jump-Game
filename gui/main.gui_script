@@ -4,24 +4,16 @@ function init(self)
 	self.game_over = gui.get_node("game_over")
 end
 
-function final(self)
-	-- Add finalization code here
-	-- Learn more: https://defold.com/manuals/script/
-	-- Remove this function if not needed
-end
-
-function update(self, dt)
-	-- Add update code here
-	-- Learn more: https://defold.com/manuals/script/
-	-- Remove this function if not needed
-end
-
 function on_message(self, message_id, message, sender)
 	if message_id == hash("update_score") then
 		gui.set_text(self.score, string.format("Score:\n%04d", message.score))
 	elseif message_id == hash("update_strikes") then
 		gui.set_text(self.strikes, string.format("Strikes:\n%s", string.rep("X", message.strikes)))
 	elseif message_id == hash("game_over") then
-		gui.set_text(self.game_over, "GAME OVER")
+		gui.set_text(self.game_over, "GAME OVER\nPRESS R TO RESTART")
+	elseif message_id == hash("restart") then
+		gui.set_text(self.score, "Score:\n0000")
+		gui.set_text(self.strikes, "Strikes")
+		gui.set_text(self.game_over, "")
 	end
 end
