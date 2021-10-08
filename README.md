@@ -16,3 +16,7 @@ Jump block is a small game made over the course of two days to get familar with 
 | D/Right Arrow | Move Right |
 | W/Up Arrow/Space | Jump |
 | R | Restart After Game Over | 
+
+# Attributions
+
+* Harmonic by Monkopus: https://monkopus.itch.io/harmonic
